@@ -1,0 +1,174 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      landing: ${{ steps.filter.outputs.landing }}
+      web: ${{ steps.filter.outputs.web }}
+      admin: ${{ steps.filter.outputs.admin }}
+      mobile: ${{ steps.filter.outputs.mobile }}
+      api: ${{ steps.filter.outputs.api }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            landing:
+              - 'apps/landing/**'
+              - 'packages/ui-web/**'
+              - 'packages/config/**'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - 'package.json'
+            web:
+              - 'apps/web/**'
+              - 'packages/ui-web/**'
+              - 'packages/api-client/**'
+              - 'packages/validators/**'
+              - 'packages/config/**'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - 'package.json'
+            admin:
+              - 'apps/admin/**'
+              - 'packages/ui-web/**'
+              - 'packages/config/**'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - 'package.json'
+            mobile:
+              - 'apps/mobile/**'
+              - 'packages/config/**'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - 'package.json'
+            api:
+              - 'apps/api/**'
+              - 'packages/validators/**'
+              - 'packages/db/**'
+              - 'packages/config/**'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - 'package.json'
+
+  landing:
+    if: needs.changes.outputs.landing == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter landing... lint
+      - run: pnpm --filter landing... typecheck
+      - run: pnpm --filter landing... test
+      - run: pnpm --filter landing... build
+
+  web:
+    if: needs.changes.outputs.web == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter web... lint
+      - run: pnpm --filter web... typecheck
+      - run: pnpm --filter web... test
+      - run: pnpm --filter web... build
+
+  admin:
+    if: needs.changes.outputs.admin == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter admin... lint
+      - run: pnpm --filter admin... typecheck
+      - run: pnpm --filter admin... test
+      - run: pnpm --filter admin... build
+
+  mobile:
+    if: needs.changes.outputs.mobile == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter mobile... lint
+      - run: pnpm --filter mobile... typecheck
+      - run: pnpm --filter mobile... test
+      - run: pnpm --filter mobile... build
+
+  api:
+    if: needs.changes.outputs.api == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter api... lint
+      - run: pnpm --filter api... typecheck
+      - run: pnpm --filter api... test
+      - run: pnpm --filter api... build

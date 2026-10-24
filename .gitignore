@@ -1,0 +1,14 @@
+node_modules
+.pnpm-store
+.turbo
+.next
+out
+dist
+coverage
+.expo
+.expo-shared
+*.log
+.env
+.env.local
+!.env.example
+.DS_Store

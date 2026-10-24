@@ -1,0 +1,25 @@
+{
+  "name": "api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/index.js",
+    "lint": "echo 'No lint rules configured for api yet'",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/zod-validator": "^0.4.1",
+    "@zakath-online/validators": "workspace:*",
+    "hono": "^4.6.10"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}
