@@ -5,9 +5,14 @@ on:
     branches: ["**"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   changes:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       landing: ${{ steps.filter.outputs.landing }}
       web: ${{ steps.filter.outputs.web }}
@@ -67,6 +72,8 @@ jobs:
     if: needs.changes.outputs.landing == 'true'
     needs: changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -86,6 +93,8 @@ jobs:
     if: needs.changes.outputs.web == 'true'
     needs: changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -105,6 +114,8 @@ jobs:
     if: needs.changes.outputs.admin == 'true'
     needs: changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -124,6 +135,8 @@ jobs:
     if: needs.changes.outputs.mobile == 'true'
     needs: changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -143,6 +156,8 @@ jobs:
     if: needs.changes.outputs.api == 'true'
     needs: changes
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
