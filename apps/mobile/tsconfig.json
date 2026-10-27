@@ -1,0 +1,13 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    // Resolve workspace packages to source; see packages/config/tsconfig/base.json.
+    "paths": {
+      "@zakath/api-client": ["../../packages/api-client/src/index.ts"],
+      "@zakath/validators": ["../../packages/validators/src/index.ts"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+}

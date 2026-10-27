@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      targets: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          # Each key is a workspace package name without the @zakath/ scope.
+          # Keep these in sync with each package's workspace dependencies.
+          filters: |
+            root: &root
+              - package.json
+              - pnpm-lock.yaml
+              - pnpm-workspace.yaml
+              - turbo.json
+              - packages/config/**
+              - .github/workflows/ci.yml
+            landing:
+              - *root
+              - apps/landing/**
+              - packages/ui-web/**
+            web:
+              - *root
+              - apps/web/**
+              - packages/ui-web/**
+              - packages/api-client/**
+              - packages/validators/**
+            admin:
+              - *root
+              - apps/admin/**
+              - packages/ui-web/**
+              - packages/api-client/**
+              - packages/validators/**
+            mobile:
+              - *root
+              - apps/mobile/**
+              - packages/api-client/**
+              - packages/validators/**
+            api:
+              - *root
+              - apps/api/**
+              - packages/validators/**
+            core:
+              - *root
+              - packages/core/**
+            db:
+              - *root
+              - packages/db/**
+            validators:
+              - *root
+              - packages/validators/**
+            api-client:
+              - *root
+              - packages/api-client/**
+              - packages/validators/**
+            ui-web:
+              - *root
+              - packages/ui-web/**
+
+  ci:
+    name: ${{ matrix.target }}
+    needs: changes
+    if: ${{ needs.changes.outputs.targets != '[]' && needs.changes.outputs.targets != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.changes.outputs.targets) }}
+        exclude:
+          - target: root
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      # Workspace packages are resolved by tsconfig paths rather than package.json
+      # dependencies, so each package is its own target in the filters above.
+      - name: Lint
+        run: pnpm turbo run lint --filter=@zakath/${{ matrix.target }}
+      - name: Typecheck
+        run: pnpm turbo run typecheck --filter=@zakath/${{ matrix.target }}
+      - name: Test
+        run: pnpm turbo run test --filter=@zakath/${{ matrix.target }}
+      - name: Build
+        run: pnpm turbo run build --filter=@zakath/${{ matrix.target }}

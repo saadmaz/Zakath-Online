@@ -1,0 +1,19 @@
+{
+  "name": "@zakath/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "eslint": "^9.37.0",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

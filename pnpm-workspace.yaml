@@ -1,0 +1,15 @@
+packages:
+  - apps/*
+  - packages/*
+
+# F: is exFAT, which supports neither symlinks nor junctions. Install a flat
+# node_modules; workspace packages are resolved by path (see packages/config/tsconfig/base.json).
+nodeLinker: hoisted
+packageImportMethod: copy
+# pnpm hard-links packages that ran install scripts even with packageImportMethod: copy,
+# which exFAT rejects. No dependency here needs its install script (esbuild, sharp and
+# Tailwind ship prebuilt platform packages), so skip them.
+ignoreScripts: true
+# The registry connection here is slow; avoid spurious timeouts.
+fetchTimeout: 300000
+fetchRetries: 6

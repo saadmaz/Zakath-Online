@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    // F: is exFAT, so pnpm copies workspace packages into node_modules instead of
+    // linking them. Resolve them to their source so edits apply without a reinstall.
+    // Paths are relative to this file.
+    "paths": {
+      "@zakath/api-client": ["../../api-client/src/index.ts"],
+      "@zakath/core": ["../../core/src/index.ts"],
+      "@zakath/db": ["../../db/src/index.ts"],
+      "@zakath/db/schema": ["../../db/src/schema.ts"],
+      "@zakath/ui-web": ["../../ui-web/src/index.ts"],
+      "@zakath/validators": ["../../validators/src/index.ts"]
+    }
+  }
+}
